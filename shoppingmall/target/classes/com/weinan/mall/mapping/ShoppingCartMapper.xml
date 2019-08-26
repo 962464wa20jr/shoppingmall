@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+
+<mapper namespace="com.weinan.mall.mapping.ShoppingCartDAO">
+ <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
+ <!-- 根据用户ID看用户购物车里的商品 -->
+ <select id="getGoodsByUserId" resultType="Goods">
+  select * from goods where id in 
+  (select goods_id from shoppingcart where user_id=#{user_id})
+ </select>
+ 
+ <!-- 增加 -->
+ <insert id="add">
+  insert into shoppingcart values(0,#{user_id},#{goods_id},#{amount})
+ </insert> 
+ 
+ <!-- 更新 -->
+ <update id="update">
+  update shoppingcart set amount=#{amount}
+  where user_id=#{user_id} and goods_id=#{goods_id}
+ </update>
+ 
+ <!-- 删除 -->
+ <delete id="delete">
+  delete from shoppingcart where user_id=#{user_id} and goods_id=#{goods_id}
+ </delete>
+ 
+ <!-- 根据用户id获取购物车商品数量 -->
+ <select id="getAmountByUserId" resultType="java.lang.Integer">
+  select count(goods_id) from shoppingcart group by user_id having user_id=#{user_id}
+ </select>
+ 
+ <!-- 根据用户id查找该用户购物车是否有商品 -->
+ <select id="isUserIn" resultType="java.lang.Integer">
+  select count(user_id) from shoppingcart where user_id=#{user_id}
+ </select>
+ 
+ <!-- 根据用户id和商品id获得加入购物车的数量 -->
+ <select id="getAmountByUserIdAndGoodsId" resultType="java.lang.Integer">
+  select amount from shoppingcart where user_id=#{user_id} and goods_id=#{goods_id}
+ </select>
+ 
+ <!-- 根据用户ID和商品ID获取购物车记录 -->
+ <select id="getByUserIdAndGoodsId" resultType="ShoppingCart">
+  select * from shoppingcart
+ </select>
+ </mapper>

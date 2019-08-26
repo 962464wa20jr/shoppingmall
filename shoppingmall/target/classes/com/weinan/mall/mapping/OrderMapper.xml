@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+
+<mapper namespace="com.weinan.mall.mapping.OrderDAO">
+ <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
+ <!-- 根据用户ID获得属于该用户的所有订单 -->
+ <select id="findAllByUserId" resultType="Order">
+  select id,c_time,receiver_name,address,phoneNumber,status,user_id
+  from orders
+  where user_id=#{user_id}
+ </select>
+ 
+ <!-- 根据ID获得订单 -->
+ <select id="findById" resultType="Order">
+  select id,c_time,receiver_name,address,phoneNumber,status,user_id
+  from orders
+  where id=#{id}
+ </select>
+ 
+ <!-- 增加订单 -->
+ <insert id="add">
+  insert into orders(receiver_name,address,phoneNumber,user_id)
+  values(#{receiver_name},#{address},#{phoneNumber},#{user_id})
+ </insert>
+ 
+ <!-- 删除订单 -->
+ <delete id="delete">
+  delete form orders
+  where id=#{id}
+ </delete>
+ 
+ <!-- 更改订单 -->
+ <update id="update">
+  update orders
+  set c_time=#{c_time},
+      receiver_name=#{receiver_name},
+      address=#{address},
+      phoneNumber=#{phoneNumber},
+      status=#{status},
+      user_id=#{user_id}
+   where id=#{id}
+ </update>
+ 
+ <!-- 查找最后一条记录 -->
+ <select id="findLatestOne" resultType="Order">
+  select * from orders order by id DESC limit 1
+ </select>
+ 
+ <!-- 查看订单详情 -->
+ <select id="queryOrderDetails" resultType="map">
+  select o.id,o.receiver_name,o.address,o.phoneNumber,sum(og.payment) sumAmount
+  from orders o left join order_goods og on o.id=#{order_id} and o.id=og.orders_id
+ </select>
+</mapper>

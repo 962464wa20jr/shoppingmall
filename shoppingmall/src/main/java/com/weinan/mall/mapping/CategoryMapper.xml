@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+
+<mapper namespace="com.weinan.mall.mapping.CategoryDAO">
+ <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
+ <!-- 获取所有的分类名 -->
+ <select id="findAllCategory" resultType="Category">
+  select id,brand_name from category
+ </select>
+ 
+ <!-- 根据编号获得分类名 -->
+ <select id="findById" resultType="Category">
+  select id,brand_name from category where id=#{id}
+ </select>
+ 
+ <!-- 增加 -->
+ <insert id="add">
+  insert into category(brand_name)
+  values(#{brand_name})
+ </insert>
+ 
+ <!-- 删除 -->
+ <delete id="delete">
+   delete form category
+   where id=#{id}
+ </delete>
+ 
+ <!-- 更新 -->
+ <update id="update">
+  update category
+  set brand_name=#{brand_name}
+  where id=#{id}
+ </update>
+ 
+ <!-- 根据分类名获得编号 -->
+ <select id="findIdByCatagoryName" resultType="java.math.BigInteger">
+  select id from category where brand_name=#{name}
+ </select>
+</mapper>
